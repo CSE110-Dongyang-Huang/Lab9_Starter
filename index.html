@@ -104,30 +104,16 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-
+      
       try {
-        if(isNaN(firstNum))
-          throw new Error("Invalid firstNum");
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
       } catch (err) {
-        console.error(err.message);
-        TrackJS.track('Invalid firstNum');
+        console.error("Invalid input");
+        TrackJS.track('Invalid input');
+      } finally {
+        console.log("Calculation check finished")
       }
       
-      class ValidationError extends Error {
-        constructor(message) {
-        super(message);
-        this.name = "ValidationError";
-        }
-      }
-
-      try {
-        if(isNaN(secondNum))
-          throw new ValidationError("Invalid secondNum");
-      } catch (err) {
-        console.error(err.message);
-        TrackJS.track('Invalid secondNum');
-      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
@@ -218,6 +204,20 @@
       errorBtns[14].addEventListener('click', function () {
         console.log(boom);
       })
+
+      class ValidationError extends Error {
+        constructor(message) {
+        super(message);
+        this.name = "ValidationError";
+        }
+      }
+
+      try {
+        throw new ValidationError("Validation error");
+      } catch (err) {
+        console.error(err);
+        TrackJS.track('Validation error');
+      }
 
       window.onerror = () => {
         console.log("Sadly an error happened my friend");
